@@ -54,4 +54,17 @@ public class DrugStockRequestDTO {
         }
         return drugs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DrugStockRequestDTO)) return false;
+        DrugStockRequestDTO that = (DrugStockRequestDTO) o;
+        return Objects.equals(drugs, that.drugs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(drugs);
+    }
 }

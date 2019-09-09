@@ -3,6 +3,7 @@ package delivery;
 import core.domain.drug.Antibiotic;
 import core.domain.drug.Aspirin;
 import core.domain.drug.DrugStock;
+import core.domain.drug.Insulin;
 import core.domain.patient.*;
 import core.usecase.GetHospitalReport;
 import org.junit.Before;
@@ -25,24 +26,18 @@ public class PatientsReportPresenterTest {
     @Mock
     IDivinityService divinityService;
 
-    @Before
-    public void
-    setup() {
-        // No miracle by default
-        given(divinityService.isResurrectionAllowed()).willReturn(false);
-    }
-
     @Test
     public void
     given_getReport_with_input_then_view_is_notified_with_result() {
         // Given
-        PatientListRequestDTO patientListRequestDTO = PatientListRequestDTO.fromString("F,T,T");
-        DrugStockRequestDTO drugStockRequestDTO = DrugStockRequestDTO.fromString("An,As");
+        PatientListRequestDTO patientListRequestDTO = PatientListRequestDTO.fromString("D");
+        DrugStockRequestDTO drugStockRequestDTO = DrugStockRequestDTO.fromString("I");
         DrugStock drugStock = getDrugStock();
         PatientList patientList = getPatientList();
         PatientsReport patientsReport = getPatientsReport();
+
         PatientsReportResponseDTO expectedResponse = new PatientsReportResponseDTO.Builder()
-                .withHealthy(3)
+                .withDiabetes(1)
                 .build();
 
         given(getHospitalReport.execute(patientListRequestDTO.toPatientsList(), drugStockRequestDTO.toDrugStock()))
@@ -57,26 +52,26 @@ public class PatientsReportPresenterTest {
         verify(patientsReportView).onReportGenerated(expectedResponse);
     }
 
+    // TODO: Hacer un test para cada combinacion distinta de status de paciente y drogas
+
     private PatientList getPatientList() {
         PatientList list = new PatientList();
-        list.add(new Patient(PatientStatus.Fever, divinityService));
-        list.add(new Patient(PatientStatus.Tuberculosis, divinityService));
-        list.add(new Patient(PatientStatus.Tuberculosis, divinityService));
+        list.add(new Patient(PatientStatus.Diabetes, divinityService));
+
         return list;
     }
 
     private DrugStock getDrugStock() {
         DrugStock stock = new DrugStock();
-        stock.add(new Antibiotic());
-        stock.add(new Aspirin());
+        stock.add(new Insulin());
+
         return stock;
     }
 
     private PatientsReport getPatientsReport() {
         PatientsReport patientsReport = new PatientsReport();
-        patientsReport.incrementCountForStatus(PatientStatus.Healthy);
-        patientsReport.incrementCountForStatus(PatientStatus.Healthy);
-        patientsReport.incrementCountForStatus(PatientStatus.Healthy);
+        patientsReport.incrementCountForStatus(PatientStatus.Diabetes);
+
         return patientsReport;
     }
 

@@ -3,7 +3,11 @@ package core.domain.drug;
 import core.domain.patient.PatientDrugHistory;
 import core.domain.patient.PatientStatus;
 
+import java.util.Objects;
+
 public class Paracetamol implements IDrug {
+
+    private final DrugName name = DrugName.Paracetamol;
 
     @Override
     public PatientStatus getPatientStatusAfterApplication(PatientStatus currentStatus, PatientDrugHistory drugHistory) {
@@ -21,7 +25,7 @@ public class Paracetamol implements IDrug {
 
     @Override
     public DrugName getName() {
-        return DrugName.Paracetamol;
+        return name;
     }
 
     private boolean isFeverStatus(PatientStatus currentStatus) {
@@ -32,4 +36,16 @@ public class Paracetamol implements IDrug {
         return drugHistory.isPresent(DrugName.Aspirin);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Paracetamol)) return false;
+        Paracetamol that = (Paracetamol) o;
+        return name == that.name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }

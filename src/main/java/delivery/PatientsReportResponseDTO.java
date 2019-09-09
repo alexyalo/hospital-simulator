@@ -84,4 +84,15 @@ public class PatientsReportResponseDTO {
     public int hashCode() {
         return Objects.hash(healthyCount, deadCount, tuberculosisCount, feverCount, diabetesCount);
     }
+
+    @Override
+    public String toString() {
+        return "PatientsReportResponseDTO{" +
+                "healthyCount=" + healthyCount +
+                ", deadCount=" + deadCount +
+                ", tuberculosisCount=" + tuberculosisCount +
+                ", feverCount=" + feverCount +
+                ", diabetesCount=" + diabetesCount +
+                '}';
+    }
 }

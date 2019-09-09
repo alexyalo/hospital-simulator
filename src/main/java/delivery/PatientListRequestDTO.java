@@ -15,7 +15,7 @@ public class PatientListRequestDTO {
             put("F", PatientStatus.Fever);
             put("X", PatientStatus.Dead);
             put("T", PatientStatus.Tuberculosis);
-            put("D", PatientStatus.Dead);
+            put("D", PatientStatus.Diabetes);
             put("H", PatientStatus.Healthy);
         }
     };
