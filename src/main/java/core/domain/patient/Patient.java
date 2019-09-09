@@ -10,10 +10,12 @@ import java.util.Objects;
 public class Patient {
 
     private PatientStatus currentStatus;
+    private IDivinityService divinityService;
     private PatientDrugHistory drugsTaken;
 
-    public Patient(PatientStatus initialStatus) {
+    public Patient(PatientStatus initialStatus, IDivinityService divinityService) {
         currentStatus = initialStatus;
+        this.divinityService = divinityService;
         drugsTaken = new PatientDrugHistory();
     }
 
@@ -22,15 +24,27 @@ public class Patient {
     }
 
     public void applyDrugs(List<IDrug> drugs) {
-
         if (isDiabeticAndMissingInsulin(drugs)) {
+
             updateStatus(PatientStatus.Dead);
-            return;
+
+        } else {
+
+            ListIterator<IDrug> drugList = drugs.listIterator();
+            while (drugList.hasNext()) {
+                applyDrug(drugList.next());
+            }
+
         }
 
-        ListIterator<IDrug> drugList = drugs.listIterator();
-        while (drugList.hasNext()){
-            applyDrug(drugList.next());
+        if (currentStatus.equals(PatientStatus.Dead)) {
+            askDivinityForMiracle();
+        }
+    }
+
+    private void askDivinityForMiracle() {
+        if (divinityService.isResurrectionAllowed()) {
+            updateStatus(PatientStatus.Healthy);
         }
     }
 

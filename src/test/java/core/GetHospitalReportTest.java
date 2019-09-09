@@ -1,11 +1,7 @@
 package core;
 
 import core.domain.drug.IDrugStock;
-import core.domain.patient.IPatientsList;
-import core.domain.patient.Patient;
-import core.domain.patient.PatientStatus;
-import core.domain.patient.PatientsReport;
-import core.domain.patient.PatientList;
+import core.domain.patient.*;
 import core.domain.drug.DrugStock;
 import core.domain.drug.Antibiotic;
 import core.domain.drug.Aspirin;
@@ -14,15 +10,23 @@ import core.domain.drug.Paracetamol;
 import core.usecase.GetHospitalReport;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GetHospitalReportTest {
 
     private IDrugStock drugStock;
     private IPatientsList patients;
     private GetHospitalReport getHospitalReport;
+
+    @Mock
+    IDivinityService divinityService;
 
     @Before
     public void
@@ -30,6 +34,9 @@ public class GetHospitalReportTest {
         drugStock = new DrugStock();
         patients = new PatientList();
         getHospitalReport = new GetHospitalReport();
+
+        // No miracle by default
+        given(divinityService.isResurrectionAllowed()).willReturn(false);
     }
 
     @Test
@@ -122,19 +129,19 @@ public class GetHospitalReportTest {
     }
 
     private Patient getDiabetesPatient() {
-        return new Patient(PatientStatus.Diabetes);
+        return new Patient(PatientStatus.Diabetes, divinityService);
     }
 
     private Patient getTuberculosisPatient() {
-        return new Patient(PatientStatus.Tuberculosis);
+        return new Patient(PatientStatus.Tuberculosis, divinityService);
     }
 
     private Patient getFeverPatient() {
-        return new Patient(PatientStatus.Fever);
+        return new Patient(PatientStatus.Fever, divinityService);
     }
 
     private Patient getHealthyPatient() {
-        return new Patient(PatientStatus.Healthy);
+        return new Patient(PatientStatus.Healthy, divinityService);
     }
 
 }

@@ -1,6 +1,7 @@
 package core;
 
 import core.domain.drug.IDrugStock;
+import core.domain.patient.IDivinityService;
 import core.domain.patient.Patient;
 import core.domain.patient.PatientStatus;
 import core.domain.drug.DrugStock;
@@ -11,10 +12,15 @@ import core.domain.drug.Paracetamol;
 import core.domain.drug.IDrug;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 
+@RunWith(MockitoJUnitRunner.class)
 public class PatientTest {
 
     private IDrug paracetamol;
@@ -22,6 +28,9 @@ public class PatientTest {
     private IDrug antibiotic;
     private IDrugStock prescribedDrugs;
     private IDrug insulin;
+
+    @Mock
+    IDivinityService divinityService;
 
     @Before
     public void
@@ -32,6 +41,9 @@ public class PatientTest {
         insulin = new Insulin();
 
         prescribedDrugs = new DrugStock();
+
+        // No miracle by default
+        given(divinityService.isResurrectionAllowed()).willReturn(false);
     }
 
     @Test
@@ -137,25 +149,51 @@ public class PatientTest {
         assertThat(patient.getStatus(), is(PatientStatus.Diabetes));
     }
 
-    private Patient getDiabeticPatient() {
+    @Test
+    public void
+    given_diabetes_and_a_miracle_when_not_given_insulin_patient_is_healthy() {
+        givenMiracle();
+        Patient patient = getDiabeticPatient();
 
-        return new Patient(PatientStatus.Diabetes);
+        patient.applyDrugs(prescribedDrugs.getList());
+
+        assertThat(patient.getStatus(), is(PatientStatus.Healthy));
+    }
+
+    @Test
+    public void
+    given_dead_and_a_miracle_when_getStatus_then_patient_is_healthy() {
+        givenMiracle();
+        Patient patient = getDeadPatient();
+
+        patient.applyDrugs(prescribedDrugs.getList());
+
+        assertThat(patient.getStatus(), is(PatientStatus.Healthy));
+    }
+
+    private Patient getDeadPatient() {
+        return new Patient(PatientStatus.Dead, divinityService);
+    }
+
+    private void givenMiracle() {
+        given(divinityService.isResurrectionAllowed()).willReturn(true);
+    }
+
+    private Patient getDiabeticPatient() {
+        return new Patient(PatientStatus.Diabetes, divinityService);
     }
 
     private Patient getTuberculosisPatient() {
-
-        return new Patient(PatientStatus.Tuberculosis);
+        return new Patient(PatientStatus.Tuberculosis, divinityService);
     }
 
 
     private Patient getFeverPatient() {
-
-        return new Patient(PatientStatus.Fever);
+        return new Patient(PatientStatus.Fever, divinityService);
     }
 
     private Patient getHealthyPatient() {
-
-        return new Patient(PatientStatus.Healthy);
+        return new Patient(PatientStatus.Healthy, divinityService);
     }
 
 

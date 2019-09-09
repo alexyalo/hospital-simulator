@@ -3,6 +3,7 @@ package delivery;
 import core.domain.patient.Patient;
 import core.domain.patient.PatientList;
 import core.domain.patient.PatientStatus;
+import dependencyinjection.ServiceProvider;
 
 import java.util.*;
 
@@ -33,7 +34,7 @@ public class PatientListRequestDTO {
         return new PatientListRequestDTO(patients);
     }
 
-    public PatientList asPatientsList() {
+    public PatientList toPatientsList() {
         PatientList result = new PatientList();
         ListIterator<Patient> listIterator = patientsList.listIterator();
 
@@ -51,7 +52,7 @@ public class PatientListRequestDTO {
             String statusKey = splittedInput[i];
 
             if (patientStatusByString.containsKey(statusKey)) {
-                Patient patient = new Patient(patientStatusByString.get(statusKey));
+                Patient patient = new Patient(patientStatusByString.get(statusKey), ServiceProvider.getDivinity());
                 patients.add(patient);
             }
         }

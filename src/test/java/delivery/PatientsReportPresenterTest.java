@@ -3,12 +3,9 @@ package delivery;
 import core.domain.drug.Antibiotic;
 import core.domain.drug.Aspirin;
 import core.domain.drug.DrugStock;
-import core.domain.drug.Paracetamol;
-import core.domain.patient.Patient;
-import core.domain.patient.PatientList;
-import core.domain.patient.PatientStatus;
-import core.domain.patient.PatientsReport;
+import core.domain.patient.*;
 import core.usecase.GetHospitalReport;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,6 +22,15 @@ public class PatientsReportPresenterTest {
     @Mock
     GetHospitalReport getHospitalReport;
 
+    @Mock
+    IDivinityService divinityService;
+
+    @Before
+    public void
+    setup() {
+        // No miracle by default
+        given(divinityService.isResurrectionAllowed()).willReturn(false);
+    }
 
     @Test
     public void
@@ -39,7 +45,7 @@ public class PatientsReportPresenterTest {
                 .withHealthy(3)
                 .build();
 
-        given(getHospitalReport.execute(patientListRequestDTO.asPatientsList(), drugStockRequestDTO.asDrugStock()))
+        given(getHospitalReport.execute(patientListRequestDTO.toPatientsList(), drugStockRequestDTO.toDrugStock()))
                 .willReturn(patientsReport);
 
         // When
@@ -53,9 +59,9 @@ public class PatientsReportPresenterTest {
 
     private PatientList getPatientList() {
         PatientList list = new PatientList();
-        list.add(new Patient(PatientStatus.Fever));
-        list.add(new Patient(PatientStatus.Tuberculosis));
-        list.add(new Patient(PatientStatus.Tuberculosis));
+        list.add(new Patient(PatientStatus.Fever, divinityService));
+        list.add(new Patient(PatientStatus.Tuberculosis, divinityService));
+        list.add(new Patient(PatientStatus.Tuberculosis, divinityService));
         return list;
     }
 

@@ -13,7 +13,7 @@ public class PatientsReportPresenter {
     }
 
     public void generateReport(PatientListRequestDTO patientListRequestDTO, DrugStockRequestDTO drugStockRequestDTO) {
-        PatientsReport report = getHospitalReport.execute(patientListRequestDTO.asPatientsList(), drugStockRequestDTO.asDrugStock());
+        PatientsReport report = getHospitalReport.execute(patientListRequestDTO.toPatientsList(), drugStockRequestDTO.toDrugStock());
 
         PatientsReportResponseDTO response = new PatientsReportResponseDTO.Builder()
                 .withHealthy(report.getHealthyCount())

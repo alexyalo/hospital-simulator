@@ -30,7 +30,7 @@ public class DrugStockRequestDTO {
         return new DrugStockRequestDTO(drugs);
     }
 
-    public DrugStock asDrugStock() {
+    public DrugStock toDrugStock() {
         DrugStock result = new DrugStock();
         ListIterator<IDrug> listIterator = drugs.listIterator();
 
