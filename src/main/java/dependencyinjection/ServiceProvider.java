@@ -5,6 +5,6 @@ import core.infrastructure.FlyingSpaghettiMonster;
 
 public class ServiceProvider {
     public static IDivinityService getDivinity() {
-        return new FlyingSpaghettiMonster();
+        return FlyingSpaghettiMonster.getInstance();
     }
 }
