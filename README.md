@@ -1,3 +1,5 @@
+For a NodeJS + GraphQL different project, please take a look at this https://github.com/alexyalo/graphql-typescript-jwt-redis-api
+
 # Build
 El proyecto utiliza maven, por lo que es necesario tener el comando de consola **mvn** instalado.
 
